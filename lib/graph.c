@@ -1,7 +1,7 @@
 #include "graph.h"
 
 graph_t *
-graph_new (int count, int directed)
+graph_new (int count)
 {
     graph_t *g = calloc(1, sizeof(graph_t));
     
@@ -10,8 +10,6 @@ graph_new (int count, int directed)
     g->names = (char **) calloc(count + 1, sizeof(char *));
     g->edges = 0;
     g->total = 0;
-
-    g->directed = directed;
 
     int i;
     char name[10];
@@ -40,8 +38,8 @@ void
 graph_edge (graph_t *g, int from, int to, int cost)
 {
     g->nodes[from][to] = cost;
-    if (!g->directed)
-        g->nodes[to][from] = cost;
+    //still needs testing
+    g->nodes[to][from] = cost;
     g->total += cost;
     g->edges ++;
 }
@@ -108,5 +106,5 @@ graph_has_edge(graph_t *g, int from, int to)
 {
     if (!g || !g->nodes)
         return 0;
-    return g->nodes[from][to] >= 0;
+    return (g->nodes[from][to] >= 0) || (g->nodes[to][from] >= 0);
 }

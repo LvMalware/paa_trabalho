@@ -12,10 +12,9 @@ typedef struct graph
     int total;
     int **nodes;
     char **names;
-    int directed;
 } graph_t;
 
-graph_t *graph_new (int, int);
+graph_t *graph_new (int);
 
 void graph_edge (graph_t *, int, int, int);
 

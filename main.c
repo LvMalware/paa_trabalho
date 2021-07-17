@@ -4,12 +4,13 @@
 
 #include "lib/graph.h"
 #include "lib/kruskal.h"
+#include "lib/dijkstra.h"
 
 void print(const char *);
 
 graph_t * read_graph ();
 
-graph_t * random_graph (int, int);
+graph_t * random_graph (int);
 
 int silent = 0;
 
@@ -20,8 +21,8 @@ main (int argc, char *argv[])
     if (argc > 1)
         silent = (strcmp(argv[1], "-s") == 0);
     
-    print("=== Kruskal algorithm for Minimal SubTree (MST) ===\n");
-    print("Implementated by: Lucas V. Araujo, Matheus H. de Souza Fontenele,\n"
+    print("=== Kruskal and Dijkstra algorithms ===\n");
+    print("Implementation by: Lucas V. Araujo, Matheus H. de Souza Fontenele,\n"
            "Odilon F. Damasceno Neto and Matheus H. Miranda\n\n");
 
     graph_t *g = NULL, *mst = NULL;
@@ -30,12 +31,16 @@ main (int argc, char *argv[])
 
     char buf[100];
     
+    int i, count, from, to, *path;
+    unsigned cost;
+    
     while (1)
     {
         print("Options: \n\n");
         print("1) Create a new graph\n");
         print("2) Show the edges for the last graph\n");
         print("3) Find and show the MST for the last graph\n");
+        print("4) Find the minimum path between two nodes in the last graph\n");
         print("0) Exit\n\n");
         print("> ");
 
@@ -68,6 +73,30 @@ main (int argc, char *argv[])
                 graph_show(mst);
                 printf("\n");
                 printf("Total cost: %d\n\n", mst->total);
+                break;
+            case 4:
+                if (!g)
+                {
+                    printf("No graph\n");
+                    break;
+                }
+                
+                print("From node: ");
+                while (fgets(buf, 100, stdin) != buf);
+                from = atoi(buf);
+
+                print("To node: ");
+                while (fgets(buf, 100, stdin) != buf);
+                to = atoi(buf);
+
+                cost = dijkstra(g, from, to, &count, &path);
+
+                printf("Minimum cost: %u\n", cost);
+                printf("Path: ");
+                for (i = 0; i < count; i ++)
+                    printf("%s -> ", g->names[path[i]]);
+                printf("\b\b\b   \n");
+                free(path);
         }
     }
     if (g)
@@ -81,7 +110,7 @@ main (int argc, char *argv[])
 graph_t *
 read_graph ()
 {
-    printf("==== Adding a new graph! ====\n");
+    print("==== Adding a new graph! ====\n");
 
     char buf[100];
     
@@ -102,9 +131,8 @@ read_graph ()
     while(fgets(buf, 100, stdin) == NULL);
 
     if (buf[0] == 'N' || buf[0] == 'n')
-        return random_graph(ncount, 0);
-
-    graph_t *g = graph_new(ncount, 0);
+        return random_graph(ncount);
+    graph_t *g = graph_new(ncount);
     
     if (ncount < 26)
     {
@@ -133,9 +161,9 @@ read_graph ()
 }
 
 graph_t *
-random_graph (int ncount, int directed)
+random_graph (int ncount)
 {
-    graph_t *g = graph_new(ncount, directed);
+    graph_t *g = graph_new(ncount);
 
     int *v = (int *) &g;
     
@@ -160,7 +188,7 @@ random_graph (int ncount, int directed)
         do {
             j = random() % ncount;
         } while (graph_has_edge (g, n, j));
-        graph_edge (g, n, j, random() % 20);
+        graph_edge (g, n, j, 1 + random() % 20);
         n = (j + i) % ncount;
     }
     return g;
