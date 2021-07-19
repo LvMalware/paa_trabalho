@@ -115,7 +115,7 @@ dijkstra (graph_t *g, int from, int to, int *count, int **out)
     int tmp;
     /* i holds the size of the path, but we are gonna use it as an index */
     i --;
-    
+    j = 0;
     /* now we swap each element at position j with the element at positon i,
      * incrementing i and decrementing j at each iteration until they have the
      * same value, which indicates we already swapped everything.
