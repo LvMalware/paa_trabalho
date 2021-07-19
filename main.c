@@ -1,3 +1,4 @@
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +24,7 @@ main (int argc, char *argv[])
     
     print("=== Kruskal and Dijkstra algorithms ===\n");
     print("Implementation by: Lucas V. Araujo, Matheus H. de Souza Fontenele,\n"
-           "Odilon F. Damasceno Neto and Matheus H. Miranda\n\n");
+           "Matheus H. Miranda and Odilon F. Damasceno Neto\n\n");
 
     graph_t *g = NULL, *mst = NULL;
     
@@ -61,12 +62,22 @@ main (int argc, char *argv[])
                 mst = NULL;
                 break;
             case 2:
+                if (!g)
+                {
+                    printf("No graph\n");
+                    break;
+                }
                 printf("\n");
                 graph_show(g);
                 printf("\n");
                 printf("Total cost: %d\n\n", g->total);
                 break;
             case 3:
+                if (!g)
+                {
+                    printf("No graph\n");
+                    break;
+                }
                 if (!mst)
                     mst = kruskal_mst(g);
                 printf("\n");
@@ -99,6 +110,7 @@ main (int argc, char *argv[])
                 free(path);
         }
     }
+    
     if (g)
         graph_free(g);
     
@@ -164,10 +176,8 @@ graph_t *
 random_graph (int ncount)
 {
     graph_t *g = graph_new(ncount);
-
-    int *v = (int *) &g;
     
-    srandom(*v ^ ncount);
+    srandom(time(NULL) ^ ncount);
     
     int i, edges = (ncount > 3) ? ncount + ncount / 2 : 3;
 
