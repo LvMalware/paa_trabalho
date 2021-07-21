@@ -261,7 +261,7 @@ random_graph (int ncount)
         /* create an edge between j and n with a random cost between 0 and 20 */
         graph_edge (g, n, j, 1 + random() % 20);
         /* get the next node at random and stores it at n */
-        n = (j + i) % ncount;
+        n = (n + 1) % ncount;
     }
     
     /* return the graph */
