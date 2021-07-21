@@ -82,7 +82,7 @@ void
 sort (void *array, size_t nmemb, size_t size,
        int (*cmp) (const void *, const void *))
 {
-    /* Interactive Quicksort: sorts a given array of nmemb elements of the given
+    /* Iteractive Quicksort: sorts a given array of nmemb elements of the given
      * size, using cmp to compare them (maybe that's overkill?)
      */
      

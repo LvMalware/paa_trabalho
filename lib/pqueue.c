@@ -37,7 +37,7 @@ enqueue (pqueue_t *pq, VALUE_T v, unsigned p)
      * are stored in a sorted manner by their priority using an insertion sort
      */
 
-    int i, index = pq->count;
+    int index = pq->count;
     /* if the queue is empty, just allocate the first element and set its value
      * and priority, updating the count of the queue
      */    
@@ -54,12 +54,31 @@ enqueue (pqueue_t *pq, VALUE_T v, unsigned p)
      * to search for the right position where to insert the new element
      */
     
-    /* TODO: use a binary search to optimize the search instead of a sequential
-     * one in order to optimize the insertion process
+    int l = 0, u = pq->count;
+    /* do a binary search to find the correct index to place the new item */
+    while (l < u)
+    {
+        /* index receives the element in the middle of the interval l-u */
+        index = (l + u) / 2;
+        /* if the item at INDEX has a bigger priority, set to u INDEX - 1 */
+        if (pq->items[index].priority > p)
+            u = index - 1;
+        /* if the item at INDEX has a lower priority, set l to INDEX + 1 */
+        else if (pq->items[index].priority < p)
+            l = index + 1;
+        /* if this item has the same priority, we break out of the loop */
+        else
+            break;
+    }
+    
+    /* when we reach this point, we can just insert the element at INDEX */
+    
+    /* NOTE: if we never find an element with the same priority of our new item,
+     * l will eventually be equal to u and the loop will be terminated. In this
+     * case, the item before index has a smaller priority and the item after it
+     * has a bigger one, so we must insert the new item in between them, which
+     * is accomplished by doing a regular insertion at INDEX
      */
-    for (i = 0; i < pq->count; i ++)
-        if (pq->items[i].priority > p)
-            index = i;
 
     /* once we known where to insert the new value, we reallocate the memory, so
      * we can fit one more item
