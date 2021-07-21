@@ -13,6 +13,8 @@ graph_t * read_graph ();
 
 graph_t * random_graph (int);
 
+int node_index(graph_t *, const char *);
+
 int silent = 0;
 
 int
@@ -104,11 +106,17 @@ main (int argc, char *argv[])
                 /* read the origin node */
                 print("From node: ");
                 while (fgets(buf, 100, stdin) != buf);
-                from = atoi(buf);
+                /* remove the newline */
+                buf[strcspn(buf, "\n")] = '\0';
+                /* get the index of the node by its name */
+                from = node_index(g, buf); //atoi(buf);
                 /* read the destination node */
                 print("To node: ");
                 while (fgets(buf, 100, stdin) != buf);
-                to = atoi(buf);
+                /* remove the newline */
+                buf[strcspn(buf, "\n")] = '\0';
+                /* get the index of the node by its name */
+                to = node_index(g, buf);
                 /* using Dijkstra algorithm, find the minimum cost and path */
                 cost = dijkstra(g, from, to, &count, &path);
                 /* print the cost and path found */
@@ -265,4 +273,32 @@ print(const char *msg)
 {
     if (!silent)
         printf("%s", msg);
+}
+
+int
+node_index(graph_t *g, const char *name)
+{
+    /* returns the index of a node given it's name */
+    
+    int i, index;
+    /* if the nodes have alphabetical names */
+    if (strlen(name) == 1 && g->count <= 26)
+        index = (int) name[0] - 65;
+    /* if they have the standard qXX names */
+    else if (name[0] == 'q' && name[1] >= 48 && name[1] <= 57)
+        sscanf(name, "q%d", &index);
+    /* in any other case */
+    else
+    {
+        for (i = 0; i < g->count; i ++)
+        {
+            if (strcmp(name, g->names[i]) == 0)
+            {
+               index = i;
+               break;
+            }
+        }
+    }
+
+    return index;
 }
