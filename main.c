@@ -220,7 +220,7 @@ random_graph (int ncount)
 
     int i;
     /* get the number of edges of the generated graph */
-    int edges = (ncount > 3) ? ncount + ncount / 2 : ncount - 1;
+    int edges = (ncount > 5) ? ncount + ncount / 2 : ncount - 1;
     
     /* NOTE: the above code is based on an assumption made during implementation
      * to allow the generation of a graph with a suitable number of edges which

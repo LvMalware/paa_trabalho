@@ -117,7 +117,7 @@ dijkstra (graph_t *g, int from, int to, int *count, int **out)
     i --;
     j = 0;
     /* now we swap each element at position j with the element at positon i,
-     * incrementing i and decrementing j at each iteration until they have the
+     * incrementing j and decrementing i at each iteration until they have the
      * same value, which indicates we already swapped everything.
      */
     while (j < i )
